@@ -6,17 +6,21 @@ export default {
     namespaced: true,
     state: {
         token: '',
+        id: '',
         nick: '',
         email: ''
     },
     mutations: {
         setUser(state, user) {
-            (state.token = user.token), (state.nick = user.nick), (state.email = user.email);
+            state.token = user.token;
+            state.id = user.id;
+            state.nick = user.nick;
+            state.email = user.email;
         }
     },
     actions: {
         logout({ commit }) {
-            commit('setUser', { token: '', nick: '', email: '' });
+            commit('setUser', { token: '', id: '', nick: '', email: '' });
             localStorage.removeItem('token');
         },
         async signup({}, user) {
@@ -42,9 +46,10 @@ export default {
             try {
                 const userData = jwt.decode(token);
                 commit('setUser', {
+                    token,
+                    id: userData.id,
                     nick: userData.nick,
-                    email: userData.email,
-                    token
+                    email: userData.email
                 });
             } catch (err) {
                 throw err;
@@ -53,11 +58,7 @@ export default {
     },
     getters: {
         user: (state) => {
-            return {
-                nick: state.nick,
-                email: state.email,
-                token: state.token
-            };
+            return { token: state.token, id: state.id, nick: state.nick, state: state.email };
         }
     }
 };

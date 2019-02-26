@@ -12,11 +12,11 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2dc4a9;
-    max-width: 300px;
+    max-width: 350px;
     margin-left: auto;
     margin-right: auto;
     background-color: white;
-    min-height: 600px;
+    min-height: 550px;
     padding: 4px !important;
 }
 form input {

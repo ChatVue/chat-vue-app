@@ -2,6 +2,7 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store/';
+import axios from 'axios';
 import 'bootstrap';
 import 'bootstrap/scss/bootstrap.scss';
 
@@ -16,6 +17,16 @@ router.beforeEach((to, from, next) => {
         next({ path: '/login' });
     }
     next();
+});
+
+axios.interceptors.request.use(function(config) {
+    const token = store.getters['user/user'].token;
+    if (token) {
+        config.headers['Authorization'] = 'Bearer ' + token;
+    } else {
+        config.headers['Authorization'] = null;
+    }
+    return config;
 });
 
 new Vue({
