@@ -6,6 +6,15 @@
                 <input
                     class="form-control"
                     type="text"
+                    v-model="nick"
+                    name="nick"
+                    placeholder="Nick"
+                >
+            </div>
+            <div class="form-group">
+                <input
+                    class="form-control"
+                    type="text"
                     v-model="email"
                     name="email"
                     placeholder="Email"
@@ -18,15 +27,6 @@
                     v-model="password"
                     name="password"
                     placeholder="Password"
-                >
-            </div>
-            <div class="form-group">
-                <input
-                    class="form-control"
-                    type="text"
-                    v-model="nick"
-                    name="nick"
-                    placeholder="Nick"
                 >
             </div>
             <div class="form-group error" v-if="message">{{ message }}</div>
