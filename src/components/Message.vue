@@ -1,9 +1,11 @@
 <template>
-    <div class="message" v-bind:class="{ messageOwn: isOwn }">
-        <p class="nick">{{nick}}</p>
-        <p>
-            <i>{{message}}</i>
-        </p>
+    <div class="messageRow" v-bind:class="{ messageRowOwn: isOwn }">
+        <div class="message" v-bind:class="{ messageOwn: isOwn }">
+            <p class="nick">{{nick}}</p>
+            <p>
+                <i>{{message}}</i>
+            </p>
+        </div>
     </div>
 </template>
 
@@ -19,19 +21,24 @@ export default {
 </script>
 
 <style>
+.messageRow {
+    text-align: left;
+}
+.messageRowOwn {
+    text-align: right;
+}
 .message {
-    margin: 6px;
-    margin-right: 25px;
-    padding: 2px;
-    padding-left: 4px;
+    margin: 6px 25px 6px 6px;
+    padding: 3px 4px 6px 4px;
+    text-align: left;
     color: black;
     background-color: #f5f5f5;
-    border-radius: 5px;
+    border-radius: 10px;
+    display: inline-block;
 }
 
 .messageOwn {
-    margin-right: 6px;
-    margin-left: 25px;
+    margin: 6px 6px 6px 25px;
     background-color: #b7e5eb;
 }
 

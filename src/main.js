@@ -3,6 +3,9 @@ import App from './App.vue';
 import router from './router';
 import store from './store/';
 import axios from 'axios';
+import VueSocketIO from 'vue-socket.io';
+import config from './config';
+
 import 'bootstrap';
 import 'bootstrap/scss/bootstrap.scss';
 
@@ -28,6 +31,18 @@ axios.interceptors.request.use(function(config) {
     }
     return config;
 });
+
+Vue.use(
+    new VueSocketIO({
+        debug: false,
+        connection: config.apiUrl,
+        vuex: {
+            store,
+            actionPrefix: 'SOCKET_',
+            mutationPrefix: 'SOCKET_'
+        }
+    })
+);
 
 new Vue({
     store,

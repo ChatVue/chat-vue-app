@@ -6,8 +6,8 @@
         <router-link class="btn-link" to="/login">Logout</router-link>
         <div ref="messages" class="messages">
             <Message
-                v-for="item in messages"
-                :key="item._id"
+                v-for="(item, index) in messages"
+                :key="`msg-${index}`"
                 :nick="item.author.nick"
                 :message="item.message"
                 :isOwn="item.author._id === userId"
@@ -36,36 +36,50 @@ export default {
         Message
     },
     data: () => {
-        return { newMsg: "", listUpdated: false };
+        return { newMsg: "", scroolDown: false };
     },
     computed: {
         messages() {
-            return this.$store.state.message.messages;
+            return this.$store.getters["message/all"];
         },
         userId() {
             return this.$store.getters["user/user"].id;
+        },
+        SOCKET_ADD_processing() {
+            return this.$store.state.message.SOCKET_ADD_processing;
         }
     },
     methods: {
         send() {
+            this.scroolDown = true;
             this.$store.dispatch("message/add", this.newMsg);
             this.newMsg = "";
         }
     },
-    created() {
-        this.$store.dispatch("message/load");
-    },
     watch: {
-        messages: function(val, oldVal) {
-            this.listUpdated = true;
+        SOCKET_ADD_processing(newVal, oldVal) {
+            if (newVal) {
+                const messages = this.$refs.messages;
+                if (
+                    messages.scrollTop + messages.clientHeight ===
+                    messages.scrollHeight
+                ) {
+                    this.scroolDown = true;
+                }
+                this.$store.dispatch("message/SOCKET_ADD_processing_finish");
+            }
         }
     },
+    created() {
+        this.$store.dispatch("message/load");
+        this.scroolDown = true;
+    },
     updated() {
-        if (this.listUpdated) {
+        if (this.scroolDown) {
             const messages = this.$refs.messages;
             if (messages) messages.scrollTop = messages.scrollHeight;
         }
-        this.listUpdated = false;
+        this.scroolDown = false;
     }
 };
 </script>
@@ -74,7 +88,7 @@ export default {
 .messages {
     min-height: 260px;
     height: 420px;
-    width: 100%;
+    width: 95%;
     text-align: left;
     margin-left: auto;
     margin-right: auto;
@@ -86,8 +100,9 @@ export default {
 }
 
 .inputTable {
-    width: 90%;
-    margin-left: 5%;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .inputTd {
