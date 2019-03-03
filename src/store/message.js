@@ -46,7 +46,7 @@ export default {
             } catch (err) {}
         },
         add({ state, commit, rootGetters }, newMsg) {
-            const bearer = 'Bearer ' + rootGetters['user/user'].token;
+            const bearer = 'Bearer ' + localStorage.token;
             const tmpId = shortid.generate();
             this._vm.$socket.emit('NEW', bearer, newMsg, tmpId);
             const user = rootGetters['user/user'];

@@ -5,6 +5,23 @@
     </div>
 </template>
 
+<script>
+export default {
+    computed: {
+        token() {
+            return this.$store.getters["user/user"].token;
+        }
+    },
+    watch: {
+        token(newVal, oldVal) {
+            if (!newVal) {
+                this.$router.push({ path: "/login" });
+            }
+        }
+    }
+};
+</script>
+
 <style>
 #app {
     font-family: "Avenir", Helvetica, Arial, sans-serif;

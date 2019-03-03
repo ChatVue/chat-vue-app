@@ -23,14 +23,25 @@ router.beforeEach((to, from, next) => {
 });
 
 axios.interceptors.request.use(function(config) {
-    const token = store.getters['user/user'].token;
-    if (token) {
-        config.headers['Authorization'] = 'Bearer ' + token;
+    if (localStorage.token) {
+        config.headers['Authorization'] = 'Bearer ' + localStorage.token;
     } else {
         config.headers['Authorization'] = null;
     }
     return config;
 });
+
+axios.interceptors.response.use(
+    function(response) {
+        return response;
+    },
+    function(error) {
+        if (error.response.status === 401) {
+            router.push({ path: '/login' });
+        }
+        return Promise.reject(error);
+    }
+);
 
 Vue.use(
     new VueSocketIO({

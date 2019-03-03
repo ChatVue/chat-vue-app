@@ -23,6 +23,9 @@ export default {
             commit('setUser', { token: '', id: '', nick: '', email: '' });
             localStorage.removeItem('token');
         },
+        SOCKET_LOGOUT({ dispatch }) {
+            dispatch('logout');
+        },
         async signup({}, user) {
             try {
                 await axios.post(config.apiUrl + '/signup', user);
