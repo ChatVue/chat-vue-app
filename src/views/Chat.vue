@@ -4,7 +4,8 @@
         <i>{{ this.$store.getters['user/user'].nick }}</i>.
         <br>You could chat now or
         <router-link class="btn-link" to="/login">Logout</router-link>
-        <div ref="messages" class="messages">
+        <div ref="messages" class="messages" @scroll="scroll">
+            <div v-if="this.$store.state.message.loading" class="text-center m-2">Loading...</div>
             <Message
                 v-for="(item, index) in messages"
                 :key="`msg-${index}`"
@@ -54,6 +55,19 @@ export default {
             this.scroolDown = true;
             this.$store.dispatch("message/add", this.newMsg);
             this.newMsg = "";
+        },
+        async scroll() {
+            const messagesElem = this.$refs.messages;
+            if (
+                messagesElem &&
+                messagesElem.scrollTop < 1 &&
+                !this.$store.state.message.loading
+            ) {
+                const oldScrollH = messagesElem.scrollHeight;
+                await this.$store.dispatch("message/load", true);
+                messagesElem.scrollTop =
+                    messagesElem.scrollHeight - oldScrollH - 25;
+            }
         }
     },
     watch: {
