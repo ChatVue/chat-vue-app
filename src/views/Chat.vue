@@ -73,10 +73,11 @@ export default {
     watch: {
         SOCKET_ADD_processing(newVal, oldVal) {
             if (newVal) {
-                const messages = this.$refs.messages;
+                const messagesElem = this.$refs.messages;
                 if (
-                    messages.scrollTop + messages.clientHeight ===
-                    messages.scrollHeight
+                    messagesElem &&
+                    messagesElem.scrollTop + messagesElem.clientHeight ===
+                        messagesElem.scrollHeight
                 ) {
                     this.scroolDown = true;
                 }
@@ -90,8 +91,9 @@ export default {
     },
     updated() {
         if (this.scroolDown) {
-            const messages = this.$refs.messages;
-            if (messages) messages.scrollTop = messages.scrollHeight;
+            const messagesElem = this.$refs.messages;
+            if (messagesElem)
+                messagesElem.scrollTop = messagesElem.scrollHeight;
         }
         this.scroolDown = false;
     }
