@@ -33,6 +33,11 @@ axios.interceptors.request.use(function(config) {
 
 axios.interceptors.response.use(
     function(response) {
+        const path = response.config.url.substr(config.apiUrl.length);
+        if (!localStorage.token && ![ '/login', '/signup' ].includes(path)) {
+            router.push({ path: '/login' });
+            return false;
+        }
         return response;
     },
     function(error) {

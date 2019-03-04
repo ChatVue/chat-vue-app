@@ -29,8 +29,14 @@ export default {
         }
     },
     actions: {
-        async load({ commit, getters }, loadHistory = false) {
+        clear({ commit }) {
+            commit('setMessages', []);
+        },
+        async load({ commit, dispatch, getters }, loadHistory = false) {
             try {
+                if (!loadHistory) {
+                    dispatch('clear');
+                }
                 commit('setLoading', true);
                 const params = { count: config.loadCount };
                 if (loadHistory && getters['all'].length > 0) {

@@ -19,8 +19,9 @@ export default {
         }
     },
     actions: {
-        logout({ commit }) {
+        logout({ commit, dispatch }) {
             commit('setUser', { token: '', id: '', nick: '', email: '' });
+            dispatch('message/clear', null, { root: true });
             localStorage.removeItem('token');
         },
         SOCKET_LOGOUT({ dispatch }) {
