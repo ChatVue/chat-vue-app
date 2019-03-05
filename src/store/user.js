@@ -5,22 +5,18 @@ import jwt from 'jsonwebtoken';
 export default {
     namespaced: true,
     state: {
-        token: '',
         id: '',
-        nick: '',
-        email: ''
+        nick: ''
     },
     mutations: {
         setUser(state, user) {
-            state.token = user.token;
             state.id = user.id;
             state.nick = user.nick;
-            state.email = user.email;
         }
     },
     actions: {
         logout({ commit, dispatch }) {
-            commit('setUser', { token: '', id: '', nick: '', email: '' });
+            commit('setUser', { id: '', nick: '' });
             dispatch('message/clear', null, { root: true });
             localStorage.removeItem('token');
         },
@@ -50,10 +46,8 @@ export default {
             try {
                 const userData = jwt.decode(token);
                 commit('setUser', {
-                    token,
                     id: userData.id,
-                    nick: userData.nick,
-                    email: userData.email
+                    nick: userData.nick
                 });
             } catch (err) {
                 throw err;
@@ -62,7 +56,7 @@ export default {
     },
     getters: {
         user: (state) => {
-            return { token: state.token, id: state.id, nick: state.nick, state: state.email };
+            return { id: state.id, nick: state.nick };
         }
     }
 };
