@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import axios from 'axios';
 import config from '../config';
 import shortid from 'shortid';
@@ -7,7 +8,8 @@ export default {
     state: {
         messages: [],
         loading: false,
-        SOCKET_ADD_processing: false
+        SOCKET_ADD_processing: false,
+        typingUsers: {}
     },
     mutations: {
         setMessages(state, messages) {
@@ -26,6 +28,12 @@ export default {
         },
         setLoading(state, isLoading) {
             state.loading = isLoading;
+        },
+        addTypingUser(state, nick) {
+            Vue.set(state.typingUsers, nick, Date.now());
+        },
+        unsetTypingUser(state, nick) {
+            Vue.delete(state.typingUsers, nick);
         }
     },
     actions: {
@@ -80,6 +88,21 @@ export default {
             commit('update', data);
             dispatch('sort');
         },
+        SOCKET_TYPING({ commit, dispatch, rootGetters }, nick) {
+            if (nick === rootGetters['user/user'].nick) return;
+            commit('addTypingUser', nick);
+            setTimeout(() => {
+                dispatch('typingUsersCheckAndClear');
+            }, Math.ceil(config.typingMessageTimeoutSec * 1050));
+        },
+        typingUsersCheckAndClear({ commit, state }) {
+            let now = Date.now();
+            for (let nick in state.typingUsers) {
+                if (state.typingUsers[nick] + config.typingMessageTimeoutSec * 1000 <= now) {
+                    commit('unsetTypingUser', nick);
+                }
+            }
+        },
         sort({ state }) {
             state.messages.sort((a, b) => {
                 return Date.parse(a.createdAt) - Date.parse(b.createdAt);
@@ -89,6 +112,9 @@ export default {
     getters: {
         all: (state) => {
             return state.messages;
+        },
+        typingNicks: (state) => {
+            return Object.keys(state.typingUsers);
         }
     }
 };

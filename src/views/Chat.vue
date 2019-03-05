@@ -4,15 +4,18 @@
         <i>{{ this.$store.getters['user/user'].nick }}</i>.
         <br>You could chat now or
         <router-link class="btn-link" to="/login">Logout</router-link>
-        <div ref="messages" class="messages" @scroll="scroll">
-            <div v-if="this.$store.state.message.loading" class="text-center m-2">Loading...</div>
-            <Message
-                v-for="(item, index) in messages"
-                :key="`msg-${index}`"
-                :nick="item.author.nick"
-                :message="item.message"
-                :isOwn="item.author._id === userId"
-            >{{item}}</Message>
+        <div class="container">
+            <TypingInfo/>
+            <div ref="messages" class="messages" @scroll="scroll">
+                <div v-if="this.$store.state.message.loading" class="text-center m-2">Loading...</div>
+                <Message
+                    v-for="(item, index) in messages"
+                    :key="`msg-${index}`"
+                    :nick="item.author.nick"
+                    :message="item.message"
+                    :isOwn="item.author._id === userId"
+                />
+            </div>
         </div>
         <table class="inputTable">
             <tr>
@@ -30,11 +33,13 @@
 <script>
 // @ is an alias to /src
 import Message from "@/components/Message.vue";
+import TypingInfo from "@/components/TypingInfo.vue";
 
 export default {
     name: "chat",
     components: {
-        Message
+        Message,
+        TypingInfo
     },
     data: () => {
         return { newMsg: "", scroolDown: false };
@@ -83,6 +88,10 @@ export default {
                 }
                 this.$store.dispatch("message/SOCKET_ADD_processing_finish");
             }
+        },
+        newMsg() {
+            const bearer = "Bearer " + localStorage.token;
+            this.$socket.emit("TYPING", bearer);
         }
     },
     created() {
@@ -101,6 +110,10 @@ export default {
 </script>
 
 <style>
+.container {
+    position: relative;
+}
+
 .messages {
     min-height: 260px;
     height: 420px;
@@ -110,6 +123,7 @@ export default {
     margin-right: auto;
     border: #c1c1c1 solid 1px;
     margin-bottom: 2px;
+    padding-bottom: 6px;
     overflow-y: auto;
     color: #6dd0c2;
     font-size: small;

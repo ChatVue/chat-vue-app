@@ -3,5 +3,7 @@ export default {
 
     // count of loaded messages per time,
     // messages with same time (ms) will be added over.
-    loadCount: 10
+    loadCount: 10,
+
+    typingMessageTimeoutSec: 10
 };

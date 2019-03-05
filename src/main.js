@@ -48,6 +48,7 @@ axios.interceptors.response.use(
     }
 );
 
+// TODO: Use only for logged in users
 Vue.use(
     new VueSocketIO({
         debug: false,
