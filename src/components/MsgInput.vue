@@ -26,6 +26,8 @@ export default {
     },
     methods: {
         send() {
+            this.newMsg = this.newMsg.trim();
+            if (!this.newMsg) return;
             this.$store.dispatch("message/add", this.newMsg);
             this.newMsg = "";
         },
