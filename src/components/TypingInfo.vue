@@ -1,7 +1,8 @@
 <template>
     <div class="typing_container" v-if="nicks.length > 0">
         <i>{{nicks.slice(0, 2).join(', ')}}</i>
-        <span v-if="nicks.length > 2">&nbsp;and
+        <span v-if="nicks.length > 2">
+            &nbsp;and
             <i>{{nicks.length - 2}} more</i>
         </span>
         
@@ -31,9 +32,8 @@ export default {
     border-radius: 7px;
     padding: 2px;
     background-color: #f0f0f0;
-    opacity: 0.8;
+    opacity: 0.9;
     text-align: left;
-    font-size: small;
     color: #6dd0c2;
 }
 </style>
