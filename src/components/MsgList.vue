@@ -84,7 +84,6 @@ export default {
 
 <style>
 .messages {
-    min-height: 260px;
     height: 420px;
     width: 95%;
     text-align: left;

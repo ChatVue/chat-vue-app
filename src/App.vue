@@ -33,7 +33,6 @@ export default {
     margin-left: auto;
     margin-right: auto;
     background-color: white;
-    min-height: 550px;
     padding: 4px !important;
 }
 form input {
