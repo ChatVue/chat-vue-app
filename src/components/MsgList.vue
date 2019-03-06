@@ -45,7 +45,10 @@ export default {
                 const oldScrollH = messagesElem.scrollHeight;
                 await this.$store.dispatch("message/load", true);
                 messagesElem.scrollTop =
-                    messagesElem.scrollHeight - oldScrollH - 25;
+                    messagesElem.scrollHeight -
+                    oldScrollH -
+                    33 +
+                    messagesElem.scrollTop;
             }
         }
     },
