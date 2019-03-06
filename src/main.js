@@ -8,6 +8,7 @@ import config from './config';
 
 import 'bootstrap';
 import 'bootstrap/scss/bootstrap.scss';
+import nl2br from 'vue-nl2br';
 
 Vue.config.productionTip = false;
 
@@ -60,6 +61,8 @@ Vue.use(
         }
     })
 );
+
+Vue.component('nl2br', nl2br);
 
 new Vue({
     store,

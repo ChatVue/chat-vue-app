@@ -20,7 +20,14 @@
         <table class="inputTable">
             <tr>
                 <td class="inputTd">
-                    <textarea v-model="newMsg" class="input"></textarea>
+                    <textarea
+                        v-model="newMsg"
+                        @keydown.enter.exact.prevent="send"
+                        @keyup.enter.exact.prevent
+                        @keydown.enter.ctrl.exact.prevent="newline"
+                        @keydown.enter.shift.exact.prevent="newline"
+                        class="input"
+                    ></textarea>
                 </td>
                 <td class="sendTd">
                     <button v-on:click="send" class="btn btn-primary send">Send</button>
@@ -73,6 +80,9 @@ export default {
                 messagesElem.scrollTop =
                     messagesElem.scrollHeight - oldScrollH - 25;
             }
+        },
+        newline() {
+            this.newMsg = this.newMsg + "\n";
         }
     },
     watch: {

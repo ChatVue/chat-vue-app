@@ -3,7 +3,7 @@
         <div class="message" v-bind:class="{ messageOwn: isOwn }">
             <p class="nick">{{nick}}</p>
             <p>
-                <i>{{message}}</i>
+                <nl2br tag="i" :text="message"/>
             </p>
         </div>
     </div>
