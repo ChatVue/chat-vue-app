@@ -11,7 +11,7 @@
 
 <script>
 export default {
-    name: "Message",
+    name: "message",
     props: {
         nick: String,
         message: String,

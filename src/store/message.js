@@ -3,14 +3,18 @@ import axios from 'axios';
 import config from '../config';
 import shortid from 'shortid';
 
-export default {
-    namespaced: true,
-    state: {
+function initialState() {
+    return {
         messages: [],
         loading: false,
-        SOCKET_ADD_processing: false,
+        newMessage: {},
         typingUsers: {}
-    },
+    };
+}
+
+export default {
+    namespaced: true,
+    state: initialState(),
     mutations: {
         setMessages(state, messages) {
             state.messages = messages;
@@ -34,11 +38,17 @@ export default {
         },
         unsetTypingUser(state, nick) {
             Vue.delete(state.typingUsers, nick);
+        },
+        clear(state) {
+            const initState = initialState();
+            Object.keys(initState).forEach((key) => {
+                state[key] = initState[key];
+            });
         }
     },
     actions: {
         clear({ commit }) {
-            commit('setMessages', []);
+            commit('clear');
         },
         async load({ commit, dispatch, getters }, loadHistory = false) {
             try {
@@ -59,30 +69,31 @@ export default {
                 commit('setLoading', false);
             } catch (err) {}
         },
-        add({ state, commit, rootGetters }, newMsg) {
+        add({ state, commit, rootGetters }, newMsgText) {
             const bearer = 'Bearer ' + localStorage.token;
             const tmpId = shortid.generate();
-            this._vm.$socket.emit('NEW', bearer, newMsg, tmpId);
+            this._vm.$socket.emit('NEW', bearer, newMsgText, tmpId);
+
             const user = rootGetters['user/user'];
             let newDate = new Date(Date.now());
             if (state.messages.length > 0) {
                 const lastDate = Date.parse(state.messages.slice(-1)[0].createdAt);
                 newDate = new Date(lastDate + 1);
             }
-            commit('add', {
+            const message = {
                 _id: tmpId,
-                message: newMsg,
+                message: newMsgText,
                 createdAt: newDate.toISOString(),
                 author: { _id: user.id, nick: user.nick }
-            });
+            };
+
+            state.newMessage = message;
+            commit('add', message);
         },
         SOCKET_ADD({ state, commit, dispatch }, newMsg) {
-            state.SOCKET_ADD_processing = true;
+            state.newMessage = newMsg;
             commit('add', newMsg);
             dispatch('sort');
-        },
-        SOCKET_ADD_processing_finish({ state }) {
-            state.SOCKET_ADD_processing = false;
         },
         SOCKET_UPDATE({ commit, dispatch }, data) {
             commit('update', data);

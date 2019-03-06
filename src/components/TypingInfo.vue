@@ -12,7 +12,7 @@
 
 <script>
 export default {
-    name: "Message",
+    name: "typing-info",
     computed: {
         nicks() {
             return this.$store.getters["message/typingNicks"];

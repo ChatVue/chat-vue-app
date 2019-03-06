@@ -4,18 +4,9 @@
         <i>{{ this.$store.getters['user/user'].nick }}</i>.
         <br>You could chat now or
         <router-link class="btn-link" to="/login">Logout</router-link>
-        <div class="container">
+        <div class="msg-container">
             <TypingInfo/>
-            <div ref="messages" class="messages" @scroll="scroll">
-                <div v-if="this.$store.state.message.loading" class="text-center m-2">Loading...</div>
-                <Message
-                    v-for="(item, index) in messages"
-                    :key="`msg-${index}`"
-                    :nick="item.author.nick"
-                    :message="item.message"
-                    :isOwn="item.author._id === userId"
-                />
-            </div>
+            <MsgList/>
         </div>
         <table class="inputTable">
             <tr>
@@ -39,28 +30,17 @@
 
 <script>
 // @ is an alias to /src
-import Message from "@/components/Message.vue";
+import MsgList from "@/components/MsgList.vue";
 import TypingInfo from "@/components/TypingInfo.vue";
 
 export default {
     name: "chat",
     components: {
-        Message,
+        MsgList,
         TypingInfo
     },
     data: () => {
-        return { newMsg: "", scroolDown: false };
-    },
-    computed: {
-        messages() {
-            return this.$store.getters["message/all"];
-        },
-        userId() {
-            return this.$store.getters["user/user"].id;
-        },
-        SOCKET_ADD_processing() {
-            return this.$store.state.message.SOCKET_ADD_processing;
-        }
+        return { newMsg: "" };
     },
     methods: {
         send() {
@@ -68,75 +48,23 @@ export default {
             this.$store.dispatch("message/add", this.newMsg);
             this.newMsg = "";
         },
-        async scroll() {
-            const messagesElem = this.$refs.messages;
-            if (
-                messagesElem &&
-                messagesElem.scrollTop < 1 &&
-                !this.$store.state.message.loading
-            ) {
-                const oldScrollH = messagesElem.scrollHeight;
-                await this.$store.dispatch("message/load", true);
-                messagesElem.scrollTop =
-                    messagesElem.scrollHeight - oldScrollH - 25;
-            }
-        },
         newline() {
             this.newMsg = this.newMsg + "\n";
         }
     },
     watch: {
-        SOCKET_ADD_processing(newVal, oldVal) {
-            if (newVal) {
-                const messagesElem = this.$refs.messages;
-                if (
-                    messagesElem &&
-                    messagesElem.scrollTop + messagesElem.clientHeight ===
-                        messagesElem.scrollHeight
-                ) {
-                    this.scroolDown = true;
-                }
-                this.$store.dispatch("message/SOCKET_ADD_processing_finish");
-            }
-        },
         newMsg() {
             const bearer = "Bearer " + localStorage.token;
             this.$socket.emit("TYPING", bearer);
         }
-    },
-    created() {
-        this.$store.dispatch("message/load");
-        this.scroolDown = true;
-    },
-    updated() {
-        if (this.scroolDown) {
-            const messagesElem = this.$refs.messages;
-            if (messagesElem)
-                messagesElem.scrollTop = messagesElem.scrollHeight;
-        }
-        this.scroolDown = false;
     }
 };
 </script>
 
 <style>
-.container {
+.msg-container {
     position: relative;
-}
-
-.messages {
-    min-height: 260px;
-    height: 420px;
-    width: 95%;
-    text-align: left;
-    margin-left: auto;
-    margin-right: auto;
-    border: #c1c1c1 solid 1px;
-    margin-bottom: 2px;
-    padding-bottom: 6px;
-    overflow-y: auto;
-    color: #6dd0c2;
-    font-size: small;
+    font-size: 11.5px;
 }
 
 .inputTable {
