@@ -67,9 +67,10 @@ export default {
                         messagesElem.scrollHeight)
             ) {
                 this.scroolDown = true;
+            } else {
+                if (navigator.vibrate) {
+                    navigator.vibrate([100, 50, 50]);
             }
-            if (!isPersonalMsg && navigator.vibrate) {
-                navigator.vibrate([100, 50, 50]);
             }
         }
     },
