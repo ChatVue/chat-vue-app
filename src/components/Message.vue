@@ -1,6 +1,6 @@
 <template>
     <div class="messageRow" v-bind:class="{ messageRowOwn: isOwn }">
-        <div class="message" v-bind:class="{ messageOwn: isOwn }">
+        <div class="message wrap" v-bind:class="{ messageOwn: isOwn }">
             <p class="nick">{{nick}}</p>
             <p>
                 <nl2br tag="i" :text="message"/>
@@ -49,5 +49,18 @@ export default {
 .nick {
     color: cornflowerblue;
     font-weight: bold;
+}
+
+.wrap {
+    -ms-word-break: break-all;
+    word-break: break-all;
+
+    /* Non standard for webkit */
+    word-break: break-word;
+
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
 }
 </style>
