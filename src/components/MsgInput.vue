@@ -3,6 +3,7 @@
         <tr>
             <td class="inputTd">
                 <textarea
+                    ref="inputMsg"
                     v-model="newMsg"
                     @keydown.enter.exact.prevent="send"
                     @keyup.enter.exact.prevent
@@ -36,6 +37,7 @@ export default {
             this.$store.dispatch("message/add", this.newMsg);
             this.newMsg = "";
             this.lastSentTime = 0;
+            this.$refs.inputMsg.focus();
         },
         newline() {
             this.newMsg = this.newMsg + "\n";
