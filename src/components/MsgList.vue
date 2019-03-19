@@ -54,16 +54,22 @@ export default {
     },
     watch: {
         newMessage(newVal) {
+            if (Object.entries(newVal).length === 0) return;
+
             const messagesElem = this.$refs.messages;
+            const isPersonalMsg =
+                newVal.author && newVal.author._id === this.userId;
+
             if (
-                (newVal &&
-                    newVal.author &&
-                    newVal.author._id === this.userId) ||
+                isPersonalMsg ||
                 (messagesElem &&
                     messagesElem.scrollTop + messagesElem.clientHeight ===
                         messagesElem.scrollHeight)
             ) {
                 this.scroolDown = true;
+            }
+            if (!isPersonalMsg && navigator.vibrate) {
+                navigator.vibrate([100, 50, 50]);
             }
         }
     },
