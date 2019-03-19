@@ -19,10 +19,15 @@
 </template>
 
 <script>
+import config from "../config";
+
 export default {
     name: "msg-input",
     data: () => {
-        return { newMsg: "" };
+        return {
+            newMsg: "",
+            lastSentTime: 0
+        };
     },
     methods: {
         send() {
@@ -30,15 +35,24 @@ export default {
             if (!this.newMsg) return;
             this.$store.dispatch("message/add", this.newMsg);
             this.newMsg = "";
+            this.lastSentTime = 0;
         },
         newline() {
             this.newMsg = this.newMsg + "\n";
         }
     },
     watch: {
-        newMsg() {
-            const bearer = "Bearer " + localStorage.token;
-            this.$socket.emit("TYPING", bearer);
+        newMsg(msg) {
+            if (
+                msg &&
+                this.lastSentTime +
+                    (config.typingMessageIgnoreTimeSec || 0) * 1000 <=
+                    Date.now()
+            ) {
+                this.lastSentTime = Date.now();
+                const bearer = "Bearer " + localStorage.token;
+                this.$socket.emit("TYPING", bearer);
+            }
         }
     }
 };

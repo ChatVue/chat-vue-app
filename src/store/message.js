@@ -91,6 +91,7 @@ export default {
             commit('add', message);
         },
         SOCKET_ADD({ state, commit, dispatch }, newMsg) {
+            commit('unsetTypingUser', newMsg.author.nick);
             state.newMessage = newMsg;
             commit('add', newMsg);
             dispatch('sort');

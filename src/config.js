@@ -5,5 +5,6 @@ export default {
     // messages with same time (ms) will be added over.
     loadCount: 10,
 
-    typingMessageTimeoutSec: 10
+    typingMessageTimeoutSec: 15,
+    typingMessageIgnoreTimeSec: 5
 };
