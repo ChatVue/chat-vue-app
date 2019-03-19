@@ -63,14 +63,14 @@ export default {
             if (
                 isPersonalMsg ||
                 (messagesElem &&
-                    messagesElem.scrollTop + messagesElem.clientHeight ===
+                    messagesElem.scrollTop + messagesElem.clientHeight + 1 >=
                         messagesElem.scrollHeight)
             ) {
                 this.scroolDown = true;
             } else {
                 if (navigator.vibrate) {
                     navigator.vibrate([100, 50, 50]);
-            }
+                }
             }
         }
     },
