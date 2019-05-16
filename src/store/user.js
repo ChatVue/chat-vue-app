@@ -41,6 +41,13 @@ export default {
         SOCKET_LOGOUT({ dispatch }) {
             dispatch('logout');
         },
+        async SOCKET_REFRESH({ dispatch }, data) {
+            await dispatch('refresh');
+            if (data[1].startsWith('Bearer ')) {
+                data[1] = 'Bearer ' + localStorage.token;
+            }
+            this._vm.$socket.emit(...data, true);
+        },
         async signup({}, user) {
             try {
                 await axios.post(config.apiUrl + '/signup', user);
