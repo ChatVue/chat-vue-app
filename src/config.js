@@ -1,5 +1,5 @@
 export default {
-    apiUrl: 'http://localhost:5009'
+    apiUrl: '',
 
     // count of loaded messages per time,
     // messages with same time (ms) will be added over.

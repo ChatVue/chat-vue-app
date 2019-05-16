@@ -8,12 +8,12 @@
 <script>
 export default {
     computed: {
-        token() {
-            return this.$store.getters["user/user"].token;
+        loggedIn() {
+            return this.$store.getters["user/user"].loggedIn;
         }
     },
     watch: {
-        token(newVal, oldVal) {
+        loggedIn(newVal, oldVal) {
             if (!newVal) {
                 this.$router.push({ path: "/login" });
             }
